@@ -52,7 +52,7 @@ yes | $SUDO apt-get -o Dpkg::Options::="--force-confold" -fuy autoremove;
 
 # Open up port 80
 port_open=$($SUDO firewall-cmd --list-all | grep -o "80/tcp");
-if [[ "$port_open" == "80/tcp" ]]; then
+if [[ "$port_open" != "80/tcp" ]]; then
     $SUDO firewall-cmd --permanent --zone=public --add-port=80/tcp
     $SUDO firewall-cmd --reload
 else
