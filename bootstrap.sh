@@ -51,8 +51,13 @@ yes | $SUDO apt-get -o Dpkg::Options::="--force-confold" -fuy autoremove;
 [ $(uname -m) == "aarch64" ] && $SUDO yes | apt install gcc dnsutils python3-dev libffi-dev libssl-dev make -y;
 
 # Open up port 80
-$SUDO firewall-cmd --permanent --zone=public --add-port=80/tcp
-$SUDO firewall-cmd --reload
+port_open = $($SUDO firewall-cmd --list-all | grep -o "80/tcp")
+if [[ "$port_open" == "80/tcp"]]; then
+    $SUDO firewall-cmd --permanent --zone=public --add-port=80/tcp
+    $SUDO firewall-cmd --reload
+else
+    echo "Port 80 already open";
+fi
 
 check_root "-H"
 
