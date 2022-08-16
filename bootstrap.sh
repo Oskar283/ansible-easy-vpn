@@ -67,15 +67,15 @@ cd $HOME/ansible-easy-vpn && ansible-galaxy install -r requirements.yml
 
 # Check if we're running on an AWS EC2 instance
 set +e
-aws=$(curl -m 5 -s http://169.254.169.254/latest/meta-data/ami-id)
+aws=true #$(curl -m 5 -s http://169.254.169.254/latest/meta-data/ami-id)
 
-if [[ "$aws" =~ ^ami.*$ ]]; then
-  aws=true
-else
-  aws=false
-fi
+#if [[ "$aws" =~ ^ami.*$ ]]; then
+#  aws=true
+#else
+#  aws=false
+#fi
 set -e
-touch $HOME/ansible-easy-vpn/custom.yml
+#touch $HOME/ansible-easy-vpn/custom.yml
 
 
 

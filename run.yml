@@ -12,7 +12,7 @@
 
   pre_tasks:
     - set_fact:
-        aws: "{{ lookup('ansible.builtin.env', 'AWS_EC2') == 'true' }}"
+        aws: true
 
   roles:
     - role: system
