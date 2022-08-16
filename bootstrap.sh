@@ -86,15 +86,15 @@ echo "This script is interactive"
 echo "If you prefer to fill in the custom.yml file manually,"
 echo "press [Ctrl+C] to quit this script"
 echo
-echo "Enter your desired UNIX username"
-read -p "Username: " username
-until [[ "$username" =~ ^[a-z0-9]*$ ]]; do
-  echo "Invalid username"
-  echo "Make sure the username only contains lowercase letters and numbers"
-  read -p "Username: " username
-done
-
-echo "username: \"${username}\"" >> $HOME/ansible-easy-vpn/custom.yml
+#echo "Enter your desired UNIX username"
+#read -p "Username: " username
+#until [[ "$username" =~ ^[a-z0-9]*$ ]]; do
+#  echo "Invalid username"
+#  echo "Make sure the username only contains lowercase letters and numbers"
+#  read -p "Username: " username
+#done
+#
+#echo "username: \"${username}\"" >> $HOME/ansible-easy-vpn/custom.yml
 
 echo
 echo "Enter your user password"
@@ -118,127 +118,127 @@ until [[ "$user_password" == "$user_password2" ]]; do
 done
 
 
-echo
-echo
-echo "Enter your domain name"
-echo "The domain name should already resolve to the IP address of your server"
-echo "Make sure that 'wg' and 'auth' subdomains also point to that IP (not necessary with DuckDNS)"
-echo
-read -p "Domain name: " root_host
-until [[ "$root_host" =~ ^[a-z0-9\.\-]*$ ]]; do
-  echo "Invalid domain name"
-  read -p "Domain name: " root_host
-done
+#echo
+#echo
+#echo "Enter your domain name"
+#echo "The domain name should already resolve to the IP address of your server"
+#echo "Make sure that 'wg' and 'auth' subdomains also point to that IP (not necessary with DuckDNS)"
+#echo
+#read -p "Domain name: " root_host
+#until [[ "$root_host" =~ ^[a-z0-9\.\-]*$ ]]; do
+#  echo "Invalid domain name"
+#  read -p "Domain name: " root_host
+#done
 
-public_ip=$(curl -s ipinfo.io/ip)
-domain_ip=$(dig +short @1.1.1.1 ${root_host})
+#public_ip=$(curl -s ipinfo.io/ip)
+#domain_ip=$(dig +short @1.1.1.1 ${root_host})
 
-until [[ $domain_ip =~ $public_ip ]]; do
-  echo
-  echo "The domain $root_host does not resolve to the public IP of this server ($public_ip)"
-  echo
-  root_host_prev=$root_host
-  read -p "Domain name [$root_host_prev]: " root_host
-  if [ -z ${root_host} ]; then
-    root_host=$root_host_prev
-  fi
-  public_ip=$(curl -s ipinfo.io/ip)
-  domain_ip=$(dig +short @1.1.1.1 ${root_host})
-  echo
-done
+#until [[ $domain_ip =~ $public_ip ]]; do
+#  echo
+#  echo "The domain $root_host does not resolve to the public IP of this server ($public_ip)"
+#  echo
+#  root_host_prev=$root_host
+#  read -p "Domain name [$root_host_prev]: " root_host
+#  if [ -z ${root_host} ]; then
+#    root_host=$root_host_prev
+#  fi
+#  public_ip=$(curl -s ipinfo.io/ip)
+#  domain_ip=$(dig +short @1.1.1.1 ${root_host})
+#  echo
+#done
 
-echo
-echo "Running certbot in dry-run mode to test the validity of the domain..."
-$SUDO certbot certonly --non-interactive --break-my-certs --force-renewal --agree-tos --email root@localhost.com --standalone --staging -d $root_host -d wg.$root_host -d auth.$root_host || exit
-echo "OK"
-
-echo "root_host: \"${root_host}\"" >> $HOME/ansible-easy-vpn/custom.yml
-
-
-if [[ ! $aws =~ true ]]; then
-  echo
-  echo "Would you like to use an existing SSH key?"
-  echo "Press 'n' if you want to generate a new SSH key pair"
-  echo
-  read -p "Use existing SSH key? [y/N]: " new_ssh_key_pair
-  until [[ "$new_ssh_key_pair" =~ ^[yYnN]*$ ]]; do
-          echo "$new_ssh_key_pair: invalid selection."
-          read -p "[y/N]: " new_ssh_key_pair
-  done
-  echo "enable_ssh_keygen: true" >> $HOME/ansible-easy-vpn/custom.yml
-
-  if [[ "$new_ssh_key_pair" =~ ^[yY]$ ]]; then
-    echo
-    read -p "Please enter your SSH public key: " ssh_key_pair
-
-    echo "ssh_public_key: \"${ssh_key_pair}\"" >> $HOME/ansible-easy-vpn/custom.yml
-  fi
-else
-  echo
-  read -p "Are you running this script on an AWS EC2 instance? [y/N]: " aws_ec2
-  until [[ "$aws_ec2" =~ ^[yYnN]*$ ]]; do
-          echo "$aws_ec2: invalid selection."
-          read -p "[y/N]: " aws_ec2
-  done
-  if [[ "$aws_ec2" =~ ^[yY]$ ]]; then
-    export AWS_EC2=true
-  echo
-  echo "Please use the SSH keys that you specified in the AWS Management Console to log in to the server."
-  echo "Also, make sure that your Security Group allows inbound connections on 51820/udp, 80/tcp and 443/tcp."
-  echo
-  fi
-fi
-
-echo
-echo "Would you like to set up the e-mail functionality?"
-echo "It will be used to confirm the 2FA setup and restore the password in case you forget it"
-echo
-echo "This is optional"
-echo
-read -p "Set up e-mail? [y/N]: " email_setup
-until [[ "$email_setup" =~ ^[yYnN]*$ ]]; do
-				echo "$email_setup: invalid selection."
-				read -p "[y/N]: " email_setup
-done
-
-if [[ "$email_setup" =~ ^[yY]$ ]]; then
-  echo
-  read -p "SMTP server: " email_smtp_host
-  until [[ "$email_smtp_host" =~ ^[a-z0-9\.]*$ ]]; do
-    echo "Invalid SMTP server"
-    read -p "SMTP server: " email_smtp_host
-  done
-  echo
-  read -p "SMTP port [465]: " email_smtp_port
-  if [ -z ${email_smtp_port} ]; then
-    email_smtp_port="465"
-  fi
-  echo
-  read -p "SMTP login: " email_login
-  echo
-  read -s -p "SMTP password: " email_password
-  until [[ ! -z "$email_password" ]]; do
-    echo "The password is empty"
-    read -s -p "SMTP password: " email_password
-  done
-  echo
-  echo
-  read -p "'From' e-mail [${email_login}]: " email
-  if [ ! -z ${email} ]; then
-    echo "email: \"${email}\"" >> $HOME/ansible-easy-vpn/custom.yml
-  fi
-
-  read -p "'To' e-mail [${email_login}]: " email_recipient
-  if [ ! -z ${email_recipient} ]; then
-    echo "email_recipient: \"${email_recipient}\"" >> $HOME/ansible-easy-vpn/custom.yml
-  fi
+# echo
+# echo "Running certbot in dry-run mode to test the validity of the domain..."
+# $SUDO certbot certonly --non-interactive --break-my-certs --force-renewal --agree-tos --email root@localhost.com --standalone --staging -d $root_host -d wg.$root_host -d auth.$root_host || exit
+# echo "OK"
+#
+# echo "root_host: \"${root_host}\"" >> $HOME/ansible-easy-vpn/custom.yml
 
 
+#if [[ ! $aws =~ true ]]; then
+#  echo
+#  echo "Would you like to use an existing SSH key?"
+#  echo "Press 'n' if you want to generate a new SSH key pair"
+#  echo
+#  read -p "Use existing SSH key? [y/N]: " new_ssh_key_pair
+#  until [[ "$new_ssh_key_pair" =~ ^[yYnN]*$ ]]; do
+#          echo "$new_ssh_key_pair: invalid selection."
+#          read -p "[y/N]: " new_ssh_key_pair
+#  done
+#  echo "enable_ssh_keygen: true" >> $HOME/ansible-easy-vpn/custom.yml
+#
+#  if [[ "$new_ssh_key_pair" =~ ^[yY]$ ]]; then
+#    echo
+#    read -p "Please enter your SSH public key: " ssh_key_pair
+#
+#    echo "ssh_public_key: \"${ssh_key_pair}\"" >> $HOME/ansible-easy-vpn/custom.yml
+#  fi
+#else
+#  echo
+#  read -p "Are you running this script on an AWS EC2 instance? [y/N]: " aws_ec2
+#  until [[ "$aws_ec2" =~ ^[yYnN]*$ ]]; do
+#          echo "$aws_ec2: invalid selection."
+#          read -p "[y/N]: " aws_ec2
+#  done
+#  if [[ "$aws_ec2" =~ ^[yY]$ ]]; then
+#    export AWS_EC2=true
+#  echo
+#  echo "Please use the SSH keys that you specified in the AWS Management Console to log in to the server."
+#  echo "Also, make sure that your Security Group allows inbound connections on 51820/udp, 80/tcp and 443/tcp."
+#  echo
+#  fi
+#fi
 
-  echo "email_smtp_host: \"${email_smtp_host}\"" >> $HOME/ansible-easy-vpn/custom.yml
-  echo "email_smtp_port: \"${email_smtp_port}\"" >> $HOME/ansible-easy-vpn/custom.yml
-  echo "email_login: \"${email_login}\"" >> $HOME/ansible-easy-vpn/custom.yml
-fi
+#echo
+#echo "Would you like to set up the e-mail functionality?"
+#echo "It will be used to confirm the 2FA setup and restore the password in case you forget it"
+#echo
+#echo "This is optional"
+#echo
+#read -p "Set up e-mail? [y/N]: " email_setup
+#until [[ "$email_setup" =~ ^[yYnN]*$ ]]; do
+#				echo "$email_setup: invalid selection."
+#				read -p "[y/N]: " email_setup
+#done
+#
+#if [[ "$email_setup" =~ ^[yY]$ ]]; then
+#  echo
+#  read -p "SMTP server: " email_smtp_host
+#  until [[ "$email_smtp_host" =~ ^[a-z0-9\.]*$ ]]; do
+#    echo "Invalid SMTP server"
+#    read -p "SMTP server: " email_smtp_host
+#  done
+#  echo
+#  read -p "SMTP port [465]: " email_smtp_port
+#  if [ -z ${email_smtp_port} ]; then
+#    email_smtp_port="465"
+#  fi
+#  echo
+#  read -p "SMTP login: " email_login
+#  echo
+#  read -s -p "SMTP password: " email_password
+#  until [[ ! -z "$email_password" ]]; do
+#    echo "The password is empty"
+#    read -s -p "SMTP password: " email_password
+#  done
+#  echo
+#  echo
+#  read -p "'From' e-mail [${email_login}]: " email
+#  if [ ! -z ${email} ]; then
+#    echo "email: \"${email}\"" >> $HOME/ansible-easy-vpn/custom.yml
+#  fi
+#
+#  read -p "'To' e-mail [${email_login}]: " email_recipient
+#  if [ ! -z ${email_recipient} ]; then
+#    echo "email_recipient: \"${email_recipient}\"" >> $HOME/ansible-easy-vpn/custom.yml
+#  fi
+#
+#
+#
+#  echo "email_smtp_host: \"${email_smtp_host}\"" >> $HOME/ansible-easy-vpn/custom.yml
+#  echo "email_smtp_port: \"${email_smtp_port}\"" >> $HOME/ansible-easy-vpn/custom.yml
+#  echo "email_login: \"${email_login}\"" >> $HOME/ansible-easy-vpn/custom.yml
+#fi
 
 
 # Set secure permissions for the Vault file

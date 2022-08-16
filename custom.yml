@@ -1,0 +1,10 @@
+username: zo
+root_host: streteredsvagen.duckdns.org
+ssh_public_key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJGGRN8Uio0PLaTak0szt6q7BD7X7KaJEl/nCWDUqG0G
+email: oskarrodholm@msn.com
+email_recipient: oskarrodholm@msn.com
+email_smtp_host: smtp.office365.com
+email_smtp_port: 587
+email_login: oskarrodholm@msn.com
+
+
