@@ -221,11 +221,11 @@ done
 #  echo
 #  read -p "SMTP login: " email_login
 #  echo
-#  read -s -p "SMTP password: " email_password
-#  until [[ ! -z "$email_password" ]]; do
-#    echo "The password is empty"
-#    read -s -p "SMTP password: " email_password
-#  done
+  read -s -p "SMTP password: " email_password
+  until [[ ! -z "$email_password" ]]; do
+    echo "The password is empty"
+    read -s -p "SMTP password: " email_password
+  done
 #  echo
 #  echo
 #  read -p "'From' e-mail [${email_login}]: " email
