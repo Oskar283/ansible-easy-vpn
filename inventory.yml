@@ -31,6 +31,8 @@ all:
 
     wireguard_port: "51820"
 
+    rpi3_host: "rpi3.{{ root_host }}"
+
     dns_nameservers:
       - 1.1.1.1
       - 1.0.0.1
