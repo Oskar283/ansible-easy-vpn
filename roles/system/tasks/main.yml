@@ -1,3 +1,9 @@
-- include_tasks: essential.yml
+---
+- name: Update the packages and configure auto-updates
+  ansible.builtin.include_tasks: setup.yml
 
-- include_tasks: user.yml
+- name: Configure the firewall
+  ansible.builtin.include_tasks: firewall.yml
+
+- name: Configure the user account
+  ansible.builtin.include_tasks: user.yml

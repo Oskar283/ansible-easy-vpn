@@ -1,29 +1,42 @@
 ---
 - name: Create the folders
-  file:
-    path: "{{ docker_dir }}/bunkerweb/data"
-    recurse: yes
+  ansible.builtin.file:
+    path: "{{ docker_dir }}/{{ item }}"
+    state: directory
     owner: root
     group: 101
     mode: 0770
+  loop:
+    - bunkerweb/
+    - bunkerweb/data
 
 - name: Copy the env file
-  template:
+  ansible.builtin.template:
     src: env.j2
+    owner: root
+    group: 101
+    mode: 0644
     dest: "{{ docker_dir }}/bunkerweb/.env"
 
 - name: Make sure the Bunkerweb container is created and running
-  docker_container:
+  register: bunkerweb_result
+  retries: 5
+  until: bunkerweb_result is succeeded
+  community.general.docker_container:
     name: "bunkerweb"
-    image: "bunkerity/bunkerweb:1.4.2"
+    image: "bunkerity/bunkerweb:{{ bunkerweb_version }}"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      start_period: 10s
     networks:
       - name: wg_network
+        ipv4_address: 10.8.2.5
     pull: yes
     state: "started"
     env_file: "{{ docker_dir }}/bunkerweb/.env"
     ports:
-      - "80:8080"
-      - "443:8443"
+      - "80:80"
+      - "443:443"
     volumes:
       - "{{ docker_dir }}/bunkerweb/data:/data"
       - "/lib/modules:/lib/modules"

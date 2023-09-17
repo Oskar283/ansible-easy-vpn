@@ -1,5 +1,6 @@
 # Please don't edit this file directly! It will be reset when you update the git repository
 # Instead, put your variable customizations into custom.yml
+---
 
 all:
   hosts:
@@ -29,18 +30,26 @@ all:
 
     wireguard_host: "wg.{{ root_host }}"
 
+    wireguard_subnet: "10.8.0.x"
+
+    wireguard_client_allowed_ips: "0.0.0.0/0, ::/0"
+
+    adguard_host: "adguard.{{ root_host }}"
+
     wireguard_port: "51820"
 
-    dns_nameservers:
-      - 1.1.1.1
-      - 1.0.0.1
+    # Possible choices: cloudflare, quad9, google
+    #
+    # In case you've enabled Adguard, Unbound and DoH functionality,
+    # this will also set upstream DoH resolvers for dnscrypt
+    dns_nameservers: cloudflare
 
-    # Language and time settings
-    # Check here for the list of possible locales
-    # https://docs.oracle.com/cd/E23824_01/html/E26033/glset.html
-    locale: en_US.UTF-8
-
-    timezone: Europe/Berlin
+    # This will enable Adguard, Unbound and dnscrypt-proxy
+    # for secure DNS resolution with ad-blocking functionality
+    #
+    # The ad blocking is disabled by default, you need to navigate to
+    # adguard.your_domain.com to set it up.
+    enable_adguard_unbound_doh: false
 
     # Set the time at which the system should reboot after installing updates (24H format)
     autoupdate_reboot_time: 03:00
@@ -76,18 +85,27 @@ all:
 
     msmtp_alias_default: "{{ email }}"
 
-    # By default, only access via the SSH port and 51820/udp is allowed
-    # The rest of the ports are closed
-    enable_ufw: true
-    ufw_ports:
-      - port: "{{ wireguard_port }}"
-        proto: "udp"
-      - port: "80"
-        proto: "tcp"
-      - port: "443"
-        proto: "tcp"
-      - port: "{{ ssh_port }}"
-        proto: "tcp"
+    ssh_allow_cidr: 0.0.0.0/0
+
+    iptables_allow_rules:
+      - desc: "Allow Wireguard"
+        proto: udp
+        port: "{{ wireguard_port }}"
+      - desc: "Allow HTTP"
+        proto: tcp
+        port: "80"
+      - desc: "Allow HTTPS"
+        proto: tcp
+        port: "443"
+      - desc: "Allow SSH"
+        proto: tcp
+        port: "{{ ssh_port }}"
 
     # Fail2Ban only comes with the SSH jail by default
     enable_fail2ban: true
+
+    pip_install_packages:
+      - name: docker
+
+    docker_users:
+      - "{{ username }}"
