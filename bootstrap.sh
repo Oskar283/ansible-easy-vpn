@@ -18,8 +18,8 @@ if grep -qs "ubuntu" /etc/os-release; then
       exit
     fi
 elif [[ -e /etc/debian_version ]]; then
-        os="debian"
-        os_version=$(grep -oE '[0-9]+' /etc/debian_version | head -1)
+  os="debian"
+  os_version=$(grep -oE '[0-9]+' /etc/debian_version | head -1)
   if [[ "$os_version" -lt 11 ]]; then
       echo "Debian 11 or higher is required to use this installer."
       echo "This version of Debian is too old and unsupported."
