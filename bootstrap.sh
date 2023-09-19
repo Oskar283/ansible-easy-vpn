@@ -423,8 +423,8 @@ echo
 echo "Success!"
 read -p "Would you like to run the playbook now? [y/N]: " launch_playbook
 until [[ "$launch_playbook" =~ ^[yYnN]*$ ]]; do
-                                echo "$launch_playbook: invalid selection."
-                                read -p "[y/N]: " launch_playbook
+  echo "$launch_playbook: invalid selection."
+  read -p "[y/N]: " launch_playbook
 done
 
 if [[ "$launch_playbook" =~ ^[yY]$ ]]; then
