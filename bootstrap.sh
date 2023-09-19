@@ -10,30 +10,31 @@ set -e
 
 # Detect OS
 if grep -qs "ubuntu" /etc/os-release; then
-	os="ubuntu"
-	os_version=$(grep 'VERSION_ID' /etc/os-release | cut -d '"' -f 2 | tr -d '.')
+        os="ubuntu"
+        os_version=$(grep 'VERSION_ID' /etc/os-release | cut -d '"' -f 2 | tr -d '.')
   if [[ "$os_version" -lt 2004 ]]; then
       echo "Ubuntu 20.04 or higher is required to use this installer."
       echo "This version of Ubuntu is too old and unsupported."
       exit
     fi
 elif [[ -e /etc/debian_version ]]; then
-	os="debian"
-	os_version=$(grep -oE '[0-9]+' /etc/debian_version | head -1)
+        os="debian"
+        os_version=$(grep -oE '[0-9]+' /etc/debian_version | head -1)
   if [[ "$os_version" -lt 11 ]]; then
       echo "Debian 11 or higher is required to use this installer."
       echo "This version of Debian is too old and unsupported."
       exit
   fi
 elif [[ -e /etc/almalinux-release || -e /etc/rocky-release || -e /etc/centos-release ]]; then
-	os="centos"
-	os_version=$(grep -shoE '[0-9]+' /etc/almalinux-release /etc/rocky-release /etc/centos-release | head -1)
+        os="centos"
+        os_version=$(grep -shoE '[0-9]+' /etc/almalinux-release /etc/rocky-release /etc/centos-release | head -1)
   if [[ "$os_version" -lt 8 ]]; then
       echo "Rocky Linux 8 or higher is required to use this installer."
       echo "This version of Rocky/CentOS is too old and unsupported."
       exit
   fi
 fi
+
 
 check_root() {
 # Check if the user is root or not
@@ -58,6 +59,7 @@ install_dependencies_debian() {
     locales
     rsync
     apparmor
+    firewalld
     python3
     python3-setuptools
     python3-apt
@@ -266,12 +268,23 @@ until [[ $domain_ip =~ $public_ip ]]; do
   echo
 done
 
+
+echo
+echo "Oracle Cloud 22.04 specific:: Opening port 80/TCP, 443/TCP to allow certbot to test. Also done in Playbook later"
+
+if [[ "$os" == "debian" || "$os" == "ubuntu" ]]; then
+  $SUDO firewall-cmd --zone=public --permanent --add-port=80/tcp
+  $SUDO firewall-cmd --zone=public --permanent --add-port=443/tcp
+  $SUDO firewall-cmd --reload
+fi
+
+
 echo
 echo "Running certbot in dry-run mode to test the validity of the domain..."
 if [[ "$adguard_enable" =~ ^[yY]$ ]]; then
-  $SUDO .venv/bin/certbot certonly --non-interactive --break-my-certs --force-renewal --agree-tos --email root@localhost.com --standalone --staging -d $root_host -d wg.$root_host -d auth.$root_host -d adguard.$root_host || $SUDO .venv/bin/certbot certonly --non-interactive --force-renewal --agree-tos --email root@localhost.com --standalone -d $root_host -d wg.$root_host -d auth.$root_host -d adguard.$root_host || exit
+  $SUDO .venv/bin/certbot certonly  --verbose--non-interactive --break-my-certs --force-renewal --agree-tos --email root@localhost.com --standalone --staging -d $root_host -d wg.$root_host -d auth.$root_host -d adguard.$root_host || $SUDO .venv/bin/certbot certonly --non-interactive --force-renewal --agree-tos --email root@localhost.com --standalone -d $root_host -d wg.$root_host -d auth.$root_host -d adguard.$root_host || exit
 else
-  $SUDO .venv/bin/certbot certonly --non-interactive --break-my-certs --force-renewal --agree-tos --email root@localhost.com --standalone --staging -d $root_host -d wg.$root_host -d auth.$root_host || $SUDO .venv/bin/certbot certonly --non-interactive --force-renewal --agree-tos --email root@localhost.com --standalone -d $root_host -d wg.$root_host -d auth.$root_host  || exit
+  $SUDO .venv/bin/certbot certonly  --verbose --non-interactive --break-my-certs --force-renewal --agree-tos --email root@localhost.com --standalone --staging -d $root_host -d wg.$root_host -d auth.$root_host || $SUDO .venv/bin/certbot certonly --non-interactive --force-renewal --agree-tos --email root@localhost.com --standalone -d $root_host -d wg.$root_host -d auth.$root_host  || exit
 fi
 echo "OK"
 
@@ -338,8 +351,8 @@ echo "This is optional"
 echo
 read -p "Set up e-mail? [y/N]: " email_setup
 until [[ "$email_setup" =~ ^[yYnN]*$ ]]; do
-				echo "$email_setup: invalid selection."
-				read -p "[y/N]: " email_setup
+                                echo "$email_setup: invalid selection."
+                                read -p "[y/N]: " email_setup
 done
 
 if [[ "$email_setup" =~ ^[yY]$ ]]; then
@@ -410,8 +423,8 @@ echo
 echo "Success!"
 read -p "Would you like to run the playbook now? [y/N]: " launch_playbook
 until [[ "$launch_playbook" =~ ^[yYnN]*$ ]]; do
-				echo "$launch_playbook: invalid selection."
-				read -p "[y/N]: " launch_playbook
+                                echo "$launch_playbook: invalid selection."
+                                read -p "[y/N]: " launch_playbook
 done
 
 if [[ "$launch_playbook" =~ ^[yY]$ ]]; then
