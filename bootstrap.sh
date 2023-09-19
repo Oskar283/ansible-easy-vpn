@@ -350,8 +350,8 @@ echo "This is optional"
 echo
 read -p "Set up e-mail? [y/N]: " email_setup
 until [[ "$email_setup" =~ ^[yYnN]*$ ]]; do
-                                echo "$email_setup: invalid selection."
-                                read -p "[y/N]: " email_setup
+  echo "$email_setup: invalid selection."
+  read -p "[y/N]: " email_setup
 done
 
 if [[ "$email_setup" =~ ^[yY]$ ]]; then
