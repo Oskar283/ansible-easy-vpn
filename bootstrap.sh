@@ -35,7 +35,6 @@ elif [[ -e /etc/almalinux-release || -e /etc/rocky-release || -e /etc/centos-rel
   fi
 fi
 
-
 check_root() {
 # Check if the user is root or not
 if [[ $EUID -ne 0 ]]; then
