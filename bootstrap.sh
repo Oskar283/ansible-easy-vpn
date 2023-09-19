@@ -26,8 +26,8 @@ elif [[ -e /etc/debian_version ]]; then
       exit
   fi
 elif [[ -e /etc/almalinux-release || -e /etc/rocky-release || -e /etc/centos-release ]]; then
-        os="centos"
-        os_version=$(grep -shoE '[0-9]+' /etc/almalinux-release /etc/rocky-release /etc/centos-release | head -1)
+  os="centos"
+  os_version=$(grep -shoE '[0-9]+' /etc/almalinux-release /etc/rocky-release /etc/centos-release | head -1)
   if [[ "$os_version" -lt 8 ]]; then
       echo "Rocky Linux 8 or higher is required to use this installer."
       echo "This version of Rocky/CentOS is too old and unsupported."
