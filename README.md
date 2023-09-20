@@ -1,3 +1,18 @@
+# **Hard fork of https://github.com/notthebee/ansible-easy-vpn** Tailormade towards Oracle Cloud VPS Canonical Ubuntu 22.04 Minimal image
+
+## Rough setup instructiions
+1  Provision VPS, image: Canonical Ubuntu 22.04 Minimal, Shape: VM.Standard.E2.1.MicroAlways
+- make sure it has a public ip
+- make sure it has an ssh key. Else you cannot access the machine
+2. Ensure the VPS has a public subnet with ingress rules for ip 0.0.0.0/0 for ports 80/tcp, 443/tcp, 51820/udp, and 22 for ssh
+3. ssh into the machine using   ssh ubuntu@ip.adress.to.machine -i <path-to-ssh-key>
+(3.b Open port 80,443,51820 on the VPS using iptables. **Now done in script**)
+4. Read and follow all sections after [Usage](#usage), the rest of the instructions are then shown in the script
+
+Notes:
+* 2 users will get setup,   ubuntu   and    <user-written-in-script>    . You can avoid 2 users by setting user in the interactive script to ubuntu
+
+
 # ansible-easy-vpn
 ![CI](https://github.com/notthebee/ansible-easy-vpn/actions/workflows/ci.yml/badge.svg)
 
