@@ -58,7 +58,6 @@ install_dependencies_debian() {
     locales
     rsync
     apparmor
-    firewalld
     python3
     python3-setuptools
     python3-apt
@@ -271,10 +270,11 @@ done
 echo
 echo "Oracle Cloud 22.04 specific:: Opening port 80/TCP, 443/TCP to allow certbot to test. Also done in Playbook later"
 
+
 if [[ "$os" == "debian" || "$os" == "ubuntu" ]]; then
-  $SUDO firewall-cmd --zone=public --permanent --add-port=80/tcp
-  $SUDO firewall-cmd --zone=public --permanent --add-port=443/tcp
-  $SUDO firewall-cmd --reload
+  $SUDO iptables -I INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+  $SUDO iptables -I INPUT -p tcp -m tcp --dport 443 -j ACCEPT
+  $SUDO service iptables save
 fi
 
 
