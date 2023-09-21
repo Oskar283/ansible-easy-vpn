@@ -1,5 +1,5 @@
 ---
-- name: source .bashrc
+- name: Source .bashrc
   shell:
     executable: /bin/bash
     cmd: source $HOME/.bashrc

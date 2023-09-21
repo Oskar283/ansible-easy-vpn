@@ -78,7 +78,7 @@ all:
         port: "{{ email_smtp_port }}"
         auth: "on"
         from: "{{ email }}"
-        user: "{{ email_login }}"
+        ansible.builtin.user: "{{ email_login }}"
         password: "{{ email_password }}"
 
     msmtp_default_account: "mailbox"

@@ -67,7 +67,7 @@
         state: directory
         mode: 0755
         owner: "{{ username }}"
-        group: "{{ username }}"
+        ansible.builtin.group: "{{ username }}"
         recurse: yes
       when: not enable_username_creation | default(False)
 
@@ -77,6 +77,6 @@
         state: directory
         mode: 0755
         owner: "{{ username }}"
-        group: "{{ username }}"
+        ansible.builtin.group: "{{ username }}"
         recurse: yes
       when: enable_username_creation | default(False)

@@ -4,7 +4,7 @@
     src: iptables.conf
     dest: /etc/iptables.conf
     owner: root
-    group: root
+    ansible.builtin.group: root
     mode: "0644"
 
 - name: Copy the iptables systemd service
@@ -12,7 +12,7 @@
     src: files/iptables.service
     dest: /etc/systemd/system/iptables.service
     owner: root
-    group: root
+    ansible.builtin.group: root
     mode: "0644"
 
 - name: Enable and start the iptables service

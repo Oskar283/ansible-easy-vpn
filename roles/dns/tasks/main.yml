@@ -4,7 +4,7 @@
     path: "{{ docker_dir }}/{{ item }}"
     state: directory
     owner: "{{ username }}"
-    group: "{{ username }}"
+    ansible.builtin.group: "{{ username }}"
     mode: 0755
   loop:
     - adguard-unbound-doh
@@ -43,7 +43,7 @@
     src: dnscrypt-proxy.toml.j2
     dest: "{{ docker_dir }}/adguard-unbound-doh/dnscrypt-proxy/dnscrypt-proxy.toml"
     owner: "{{ username }}"
-    group: "{{ username }}"
+    ansible.builtin.group: "{{ username }}"
     mode: 0644
   notify: Restart adguard-unbound-doh
 

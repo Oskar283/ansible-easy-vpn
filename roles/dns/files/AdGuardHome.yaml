@@ -125,7 +125,7 @@ log_compress: false
 log_localtime: false
 verbose: false
 os:
-  group: ""
-  user: ""
+  ansible.builtin.group: ""
+  ansible.builtin.user: ""
   rlimit_nofile: 0
 schema_version: 14
