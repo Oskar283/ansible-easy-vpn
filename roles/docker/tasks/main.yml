@@ -68,5 +68,5 @@
     enabled: yes
 
 - name: Create the wg network
-  docker_network:
+  community.general.docker_network:
     name: wg_network
