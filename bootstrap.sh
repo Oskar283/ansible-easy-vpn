@@ -269,12 +269,13 @@ done
 
 echo
 echo "Oracle Cloud 22.04 specific:: Opening port 80/TCP, 443/TCP to allow certbot to test. Also done in Playbook later"
+echo "For more info on how to open posts: https://blogs.oracle.com/developers/post/enabling-network-traffic-to-ubuntu-images-in-oracle-cloud-infrastructure"
 
 
 if [[ "$os" == "debian" || "$os" == "ubuntu" ]]; then
   $SUDO iptables -I INPUT -p tcp -m tcp --dport 80 -j ACCEPT
   $SUDO iptables -I INPUT -p tcp -m tcp --dport 443 -j ACCEPT
-  $SUDO service iptables save
+  $SUDO service iptables save #DOES not work
 fi
 
 

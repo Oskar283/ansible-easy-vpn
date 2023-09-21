@@ -3,9 +3,11 @@
 ## Rough setup instructiions
 1  Provision VPS, image: Canonical Ubuntu 22.04 Minimal, Shape: VM.Standard.E2.1.MicroAlways
 - make sure it has a public ip
-- make sure it has an ssh key. Else you cannot access the machine
+- make sure it has an ssh key. Else you cannot access the machine.
 2. Ensure the VPS has a public subnet with ingress rules for ip 0.0.0.0/0 for ports 80/tcp, 443/tcp, 51820/udp, and 22 for ssh
 3. ssh into the machine using   ssh ubuntu@ip.adress.to.machine -i <path-to-ssh-key>
+- If you are using WSL to ssh into the machine and are getting `Permission denied (publickey)`, try useing `sudo`
+
 (3.b Open port 80,443,51820 on the VPS using iptables. **Now done in script**)
 4. Read and follow all sections after [Usage](#usage), the rest of the instructions are then shown in the script
 
