@@ -132,7 +132,7 @@ if [ -d "$HOME/ansible-easy-vpn" ]; then
   git pull
   popd
 else
-  git clone https://github.com/notthebee/ansible-easy-vpn $HOME/ansible-easy-vpn
+  git clone https://github.com/Oskar283/ansible-easy-vpn $HOME/ansible-easy-vpn
 fi
 
 # Set up a Python venv
