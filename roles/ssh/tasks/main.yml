@@ -33,7 +33,7 @@
 - name: Install the existing public key
   when: ssh_public_key is defined
   ansible.posix.authorized_key:
-    ansible.builtin.user: "{{ username }}"
+    user: "{{ username }}"
     key: "{{ ssh_public_key }}"
 
 - name: Copy the existing public key to a new user (AWS)
