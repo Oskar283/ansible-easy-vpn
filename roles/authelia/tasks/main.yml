@@ -4,7 +4,7 @@
     path: "{{ docker_dir }}/authelia"
     state: directory
     owner: "root"
-    ansible.builtin.group: "root"
+    group: "root"
     mode: 0755
 
 - name: Copy the main config
@@ -12,7 +12,7 @@
     src: configuration.yml.j2
     dest: "{{ docker_dir }}/authelia/configuration.yml"
     owner: "root"
-    ansible.builtin.group: "root"
+    group: "root"
     mode: 0644
   notify: Restart authelia
 
@@ -22,7 +22,7 @@
     src: users_database.yml.j2
     dest: "{{ docker_dir }}/authelia/users_database.yml"
     owner: "root"
-    ansible.builtin.group: "root"
+    group: "root"
     mode: 0644
   notify: Restart authelia
 
