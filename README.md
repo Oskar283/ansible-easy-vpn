@@ -14,6 +14,23 @@
 Notes:
 * 2 users will get setup,   ubuntu   and    <user-written-in-script>    . You can avoid 2 users by setting user in the interactive script to ubuntu
 
+# TODO: Automatically prune logs. temp fix:
+```
+sudo nano /etc/systemd/journald.conf
+```
+Add or modify these lines:
+```
+[Journal]
+SystemMaxUse=500M
+SystemKeepFree=100M
+SystemMaxFileSize=50M
+SystemMaxFiles=5
+```
+then restart journald
+```
+sudo systemctl restart systemd-journald
+```
+
 
 # ansible-easy-vpn
 ![CI](https://github.com/notthebee/ansible-easy-vpn/actions/workflows/ci.yml/badge.svg)
