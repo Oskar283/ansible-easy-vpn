@@ -10,7 +10,7 @@
     dest: "/etc/fail2ban/action.d/sendmail-common.local"
     mode: 0644
     owner: root
-    ansible.builtin.group: root
+    group: root
   notify:
     - Restart fail2ban
 
@@ -20,7 +20,7 @@
     dest: "/etc/fail2ban/jail.local"
     mode: 0644
     owner: root
-    ansible.builtin.group: root
+    group: root
   notify:
     - Restart fail2ban
 
