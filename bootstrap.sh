@@ -275,7 +275,7 @@ echo "For more info on how to open posts: https://blogs.oracle.com/developers/po
 if [[ "$os" == "debian" || "$os" == "ubuntu" ]]; then
   $SUDO iptables -I INPUT -p tcp -m tcp --dport 80 -j ACCEPT
   $SUDO iptables -I INPUT -p tcp -m tcp --dport 443 -j ACCEPT
-  $SUDO service iptables save #DOES not work
+  $SUDO iptables-save
 fi
 
 
