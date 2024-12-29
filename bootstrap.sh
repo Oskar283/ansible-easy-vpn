@@ -325,7 +325,8 @@ echo "dns_nameservers: \"${dns_nameservers}\"" >> $HOME/ansible-easy-vpn/custom.
 if [[ ! $AWS_EC2 =~ true ]]; then
   echo
   echo "Would you like to use an existing SSH key?"
-  echo "Press 'n' if you want to generate a new SSH key pair"
+  ehco "Its mandatory."
+  echo "Press 'n' if you would like to cancel script"
   echo
   read -p "Use existing SSH key? [y/N]: " new_ssh_key_pair
   until [[ "$new_ssh_key_pair" =~ ^[yYnN]*$ ]]; do
@@ -339,6 +340,8 @@ if [[ ! $AWS_EC2 =~ true ]]; then
     read -p "Please enter your SSH public key: " ssh_key_pair
 
     echo "ssh_public_key: \"${ssh_key_pair}\"" >> $HOME/ansible-easy-vpn/custom.yml
+  else
+    exit 84
   fi
 fi
 
