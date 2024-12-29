@@ -10,7 +10,7 @@
     path: "/home/{{ username }}/.ssh"
     state: directory
     owner: "{{ username }}"
-    ansible.builtin.group: "{{ username }}"
+    group: "{{ username }}"
     mode: 0700
 
 - name: Generate and install a public key pair
@@ -27,7 +27,7 @@
         src: /tmp/id_ssh_ed25519.pub
         dest: "/home/{{ username }}/.ssh/authorized_keys"
         owner: "{{ username }}"
-        ansible.builtin.group: "{{ username }}"
+        group: "{{ username }}"
         mode: 0600
 
 - name: Install the existing public key
@@ -42,7 +42,7 @@
     src: "/home/ubuntu/.ssh/authorized_keys"
     dest: "/home/{{ username }}/.ssh/authorized_keys"
     owner: "{{ username }}"
-    ansible.builtin.group: "{{ username }}"
+    group: "{{ username }}"
     mode: 0600
 
 - name: Update SSH configuration to be more secure
