@@ -1,6 +1,6 @@
 ---
 - name: Ensure the root group exists
-  ansible.builtin.group:
+  group:
     name: "root"
     state: present
 
@@ -27,7 +27,7 @@
   when: enable_username_creation | default(False)
 
 - name: Ensure group "{{ username }}" exists
-  ansible.builtin.group:
+  group:
     name: "{{ username }}"
     state: present
   when: enable_username_creation | default(False)
@@ -67,7 +67,7 @@
         state: directory
         mode: 0755
         owner: "{{ username }}"
-        ansible.builtin.group: "{{ username }}"
+        group: "{{ username }}"
         recurse: yes
       when: not enable_username_creation | default(False)
 
@@ -77,6 +77,6 @@
         state: directory
         mode: 0755
         owner: "{{ username }}"
-        ansible.builtin.group: "{{ username }}"
+        group: "{{ username }}"
         recurse: yes
       when: enable_username_creation | default(False)
