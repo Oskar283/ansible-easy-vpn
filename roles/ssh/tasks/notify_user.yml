@@ -9,7 +9,7 @@
 
 - name: Restart sshd
   ansible.builtin.service:
-    name: sshd
+    name: ssh
     state: restarted
   when: ssh_public_key is defined
 
