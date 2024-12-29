@@ -1,4 +1,4 @@
-# **Hard fork of https://github.com/notthebee/ansible-easy-vpn** Tailormade towards Oracle Cloud VPS Canonical Ubuntu 22.04 Minimal image
+# **Hard fork of https://github.com/notthebee/ansible-easy-vpn** Tailormade towards Oracle Cloud VPS Canonical Ubuntu 24.04 Minimal image
 
 ## Rough setup instructiions
 1  Provision VPS, image: Canonical Ubuntu 22.04 Minimal, Shape: VM.Standard.E2.1.MicroAlways
